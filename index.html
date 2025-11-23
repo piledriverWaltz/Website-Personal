@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Portfolio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        body {
+            background: #0e0e0e;
+            color: #fff;
+        }
+        header {
+            padding: 10px 10%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+        }
+        header h1 {
+            font-size: 24px;
+            letter-spacing: 2px;
+        }
+        nav a {
+            margin-left: 20px;
+            color: #fff;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+        nav a:hover {
+            color: #00eaff;
+        }
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 10%;
+        }
+        .hero img {
+            width: 220px;
+            height: 160px;
+            border-radius: 50% / 40%;
+            object-fit: cover;
+            margin-bottom: 20px;
+            border: 4px solid #00eaff;
+        }
+        .hero h2 {
+            font-size: 48px;
+        }
+        .hero p {
+            margin-top: 10px;
+            max-width: 600px;
+            opacity: 0.8;
+        }
+        .btn {
+            margin-top: 20px;
+            padding: 10px 25px;
+            background: #00eaff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.3s;
+            color: #000;
+        }
+        .btn:hover {
+            transform: scale(1.05);
+        }
+        .section {
+            padding: 80px 10%;
+        }
+        .section h3 {
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+        .skills, .projects {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background: rgba(49, 40, 40, 0.1);
+            padding: 16px 12px 12px 12px;
+            border-radius: 16px;
+            transition: 0.3s;
+            object-fit: cover;
+            border: 2px solid #00eaff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 170px;
+            min-width: 140px;
+            max-width: 200px;
+        }
+        .card img.skill-img {
+            width: 64px;
+            height: 64px;
+            object-fit: contain;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            background: #fff;
+            border: 1px solid #00eaff;
+            padding: 4px;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            background: rgba(255,255,255,0.15);
+        }
+        footer {
+            text-align: center;
+            padding: 30px;
+            opacity: 0.5;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        .contact {
+            
+        
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-width: 500px;
+        }
+        .contact p { display:flex; align-items:center; gap:8px; }
+        .contact img { width: 75px; height: 75px; }
+        .contact a { color:#00eaff; text-decoration:none; }
+        .contact a:hover { text-decoration:underline; }
+
+        /* Foto profil bulat untuk Contact */
+        .contact-profile {
+            width: 360px;
+            height: 360px;
+            border-radius: 50% / 35%;
+            object-fit: cover;
+            margin-bottom: 20px;
+            border: 5px solid #00eaff;
+        }
+        /* Modal Pop Up */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 999;
+            left: 0;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.7);
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.4s;
+        }
+        .modal.active {
+            display: flex;
+        }
+        .modal-content {
+            background: #222;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            text-align: center;
+            position: relative;
+            max-width: 90vw;
+            max-height: 80vh;
+            animation: popUp 0.4s;
+        }
+        .modal-content img {
+            max-width: 350px;
+            max-height: 250px;
+            border-radius: 12px;
+            margin-bottom: 18px;
+            border: 3px solid #00eaff;
+        }
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 18px;
+            font-size: 28px;
+            color: #00eaff;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes popUp {
+            0% { transform: scale(0.7); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        /* Extra polish */
+        body::before {
+            content: "";
+            position: fixed;
+            left: 0; top: 0; right: 0; bottom: 0;
+            background: linear-gradient(180deg, rgba(0,234,255,0.03), rgba(0,0,0,0.25));
+            pointer-events: none;
+            z-index: 0;
+        }
+        header, .section, .hero { position: relative; z-index: 1; }
+
+        /* Logo subtle float + glow */
+        .brand-logo {
+            transition: transform 400ms ease, filter 300ms ease;
+            will-change: transform;
+            filter: drop-shadow(0 8px 18px rgba(0,234,255,0.06));
+            cursor: default;
+        }
+        .brand-logo:hover { transform: translateY(-4px) scale(1.03); filter: drop-shadow(0 18px 40px rgba(123,97,255,0.12)); }
+        @keyframes floatLogo { 0% { transform: translateY(0); } 50% { transform: translateY(-6px); } 100% { transform: translateY(0); } }
+        .brand-logo.animate { animation: floatLogo 6s ease-in-out infinite; }
+
+        /* Splash / opening overlay */
+        .splash {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(ellipse at center, rgba(0,0,0,1) 0%, rgba(0,0,0,0.95) 50%, rgba(0,0,0,0.9) 100%);
+            z-index: 4000;
+            transition: opacity 420ms ease, visibility 420ms ease;
+        }
+        .splash.hide { opacity: 0; pointer-events: none; visibility: hidden; }
+        .splash-content { text-align: center; transform: scale(0.9); transition: transform 600ms cubic-bezier(.2,.9,.2,1), opacity 300ms ease; }
+        .splash img { width: 260px; max-width: 56vw; height: auto; display:block; filter: drop-shadow(0 28px 60px rgba(0,234,255,0.12)); border-radius: 8px; }
+        .splash .splash-text { margin-top: 12px; color: #00eaff; font-weight: 800; letter-spacing: 2px; font-size: 18px; }
+        .splash-progress { width: 220px; max-width: 46vw; height: 6px; background: rgba(255,255,255,0.06); border-radius: 999px; margin: 12px auto 0; overflow: hidden; }
+        .splash-fill { width: 0%; height: 100%; background: linear-gradient(90deg,#00eaff,#7b61ff); transition: width 1200ms linear; }
+        .splash-skip { position: absolute; right: 22px; top: 22px; background: transparent; border: 1px solid rgba(255,255,255,0.08); color: #fff; padding:6px 10px; border-radius:8px; cursor:pointer; backdrop-filter: blur(6px); }
+        .splash-skip:hover { background: rgba(255,255,255,0.03); }
+        .logo-entrance { transform-origin: center; animation: logoIn 900ms cubic-bezier(.2,.9,.2,1) both; }
+        @keyframes logoIn { 0% { transform: translateY(12px) scale(0.9) rotate(-6deg); opacity: 0 } 60% { transform: translateY(-6px) scale(1.06) rotate(2deg); opacity: 1 } 100% { transform: translateY(0) scale(1) rotate(0) } }
+        @media (prefers-reduced-motion: reduce) {
+            .splash, .splash-content, .logo-entrance, .splash-fill { transition: none !important; animation: none !important; }
+        }
+
+        /* Project thumbnail + tags + view button */
+        .proj-thumb {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            border: 2px solid rgba(255,255,255,0.04);
+        }
+        .proj-body { display:flex; flex-direction:column; gap:8px; align-items:center; }
+        .proj-title { font-size: 15px; text-align:center; }
+        .tags { display:flex; gap:6px; flex-wrap:wrap; justify-content:center; }
+        .tag { background:#00eaff; color:#001; padding:4px 8px; border-radius:999px; font-size:12px; }
+        .btn-view { background:transparent; border:1px solid #00eaff; color:#00eaff; padding:6px 12px; border-radius:8px; cursor:pointer; transition: all 200ms; }
+        .btn-view:hover { background:#00eaff; color:#001; transform:translateY(-3px); }
+
+        /* Slight perspective for cards on hover */
+        .projects { perspective: 900px; }
+        .card { transform-style: preserve-3d; }
+        .card:hover { transform: translateY(-10px) rotateX(2deg) scale(1.02); }
+
+        /* Modal image subtle scale */
+        .modal-content img { transition: transform 260ms ease; }
+        .modal.active .modal-content img { transform: scale(1.02); }
+
+        /* Hero typing subtitle */
+        .hero-sub {
+            margin-top: 10px;
+            font-size: 18px;
+            background: linear-gradient(90deg,#00eaff,#7b61ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 0.6px;
+            opacity: 0.95;
+        }
+
+        /* Card hover polish */
+        .card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 18px 40px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.02);
+            border-color: #7b61ff;
+        }
+
+        /* Skill progress */
+        .skill-bar {
+            width: 100%;
+            height: 10px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 999px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        .skill-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg,#00eaff,#7b61ff);
+            border-radius: 999px;
+            transition: width 900ms cubic-bezier(.2,.9,.2,1);
+        }
+
+        /* Footer socials */
+        footer { display:flex; flex-direction:column; gap:8px; align-items:center; }
+        .socials { display:flex; gap:12px; }
+        .socials a { color:#fff; opacity:0.8; text-decoration:none; }
+        .socials a:hover { opacity:1; transform:translateY(-3px); }
+    </style>
+</head>
+<body>
+    <!-- Splash opening overlay -->
+    <div class="splash" id="splash">
+        <button class="splash-skip" id="splashSkip" aria-label="Skip opening">Skip</button>
+        <div class="splash-content" role="dialog" aria-label="Opening splash">
+            <img id="splashLogo" class="logo-entrance" src="unnamed__2_-removebg-preview (1).png" alt="Multvr Logo" />
+            <div class="splash-text">Loading..</div>
+            <div class="splash-progress" aria-hidden="true"><div class="splash-fill" id="splashFill"></div></div>
+        </div>
+    </div>
+    <header>
+        <div style="display: flex; align-items: center;">
+            <img class="brand-logo animate" src="unnamed__2___4___1_-removebg-preview.png" alt="Multvr Logo" style="width:110px; height:auto; margin-right:18px;" />
+            <h1>Multvr.</h1>
+        </div>
+        <nav>
+            <a href="#home">Home</a>
+            <a href="#skills">Skills</a>
+            <a href="#projects">Projects</a>
+            <a href="#contact">Contact</a>
+        </nav>
+    </header>
+
+    <section class="hero" id="home">
+        <img src="unnamed.jpg" alt="Profile" />
+        <h2 id="heroTitle">Dev of Multvr.</h2>
+        <div class="hero-sub" id="heroSub">Web • Robot • IoT • Game</div>
+        <p>Sup ya'll ! i am a student from SMKN 2 SURABAYA who want learn a new things.</p>
+        <button class="btn" id="contactBtn">Contact Person</button>
+    </section>
+
+    <section class="section" id="skills">
+        <h3>Skills</h3>
+        <div class="skills">
+            <div class="card">
+                <img class="skill-img" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" alt="HTML" />
+                <div class="skill-label">HTML</div>
+                <div class="skill-bar"><div class="skill-fill" data-progress="92"></div></div>
+            </div>
+            <div class="card">
+                <img class="skill-img" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" alt="CSS" />
+                <div class="skill-label">CSS</div>
+                <div class="skill-bar"><div class="skill-fill" data-progress="88"></div></div>
+            </div>
+            <div class="card">
+                <img class="skill-img" src="633aad61b38680050f7c0845-robotic-arm-kit-6dof-programming-robot (1) - Copy.jpg" alt="Robotic" />
+                <div class="skill-label">Robotic</div>
+                <div class="skill-bar"><div class="skill-fill" data-progress="70"></div></div>
+            </div>
+            <div class="card">
+                <img class="skill-img" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg" alt="C++" />
+                <div class="skill-label">C++</div>
+                <div class="skill-bar"><div class="skill-fill" data-progress="78"></div></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="projects">
+        <h3>Projects</h3>
+        <div class="projects">
+            <div class="card project-card" data-title="Project A" data-img="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80" data-desc="Sistem pengendalian Air bersih menggunakan ESP32, Water level, Turbidity sensor dan Sensor pH.">
+                <img class="proj-thumb" src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80" alt="Project A" />
+                <div class="proj-body">
+                    <div class="proj-title">Project A - Sistem Pengendalian Air Bersih</div>
+                    <div class="tags"><span class="tag">ESP32</span><span class="tag">IoT</span></div>
+                    <button class="btn-view">View</button>
+                </div>
+            </div>
+
+            <div class="card project-card" data-title="Project B" data-img="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80" data-desc="Karya Tulis Ilmiah tentang sistem kendali.">
+                <img class="proj-thumb" src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=800&q=80" alt="Project B" />
+                <div class="proj-body">
+                    <div class="proj-title">Project B - Karya Tulis Ilmiah</div>
+                    <div class="tags"><span class="tag">Research</span><span class="tag">Paper</span></div>
+                    <button class="btn-view">View</button>
+                </div>
+            </div>
+
+            <div class="card project-card" data-title="Project C" data-img="https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80" data-desc="Web Portofolio.">
+                <img class="proj-thumb" src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=800&q=80" alt="Project C" />
+                <div class="proj-body">
+                    <div class="proj-title">Project C - Web Portofolio</div>
+                    <div class="tags"><span class="tag">Web</span><span class="tag">Portfolio</span></div>
+                    <button class="btn-view">View</button>
+                </div>
+            </div>
+
+            <div class="card project-card" data-title="Project D" data-img="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80" data-desc="Making Drone (Coming Soon).">
+                <img class="proj-thumb" src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=800&q=80" alt="Project D" />
+                <div class="proj-body">
+                    <div class="proj-title">Project D - Making Drone</div>
+                    <div class="tags"><span class="tag">Drone</span><span class="tag">Hardware</span></div>
+                    <button class="btn-view">View</button>
+                </div>
+            </div>
+        </div>
+        <!-- Modal Pop Up -->
+        <div class="modal" id="projectModal">
+            <div class="modal-content" id="modalContent">
+                <button class="modal-close" id="closeModal">&times;</button>
+                <img src="" alt="Project Image" id="modalImg" />
+                <h4 id="modalTitle"></h4>
+                <p id="modalDesc"></p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="contact">
+        <h3>Contact</h3>
+        <div class="contact">
+            <img class="contact-profile" src="unnamed (2).png" alt="Contact Profile" />
+            <p><img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/gmail.svg" alt="Email"/> Email: <a href="mailto:example@mail.com">trollmr537@gmail.com</a></p>
+
+            <p><img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/github.svg" alt="GitHub"/> GitHub: <a href="https://github.com/username" target="_blank" rel="noopener"><https:>github.com/piledriverWaltz</a></p>
+
+            <p><img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/instagram.svg" alt="Instagram"/> Instagram: <a href="https://instagram.com/username" target="_blank" rel="noopener">@multivrick</a></p>
+
+            <p><img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/whatsapp.svg" alt="WhatsApp"/> WhatsApp: <a href="https://wa.me/6285126485617s" target="_blank" rel="noopener">+62 851-2648-5617</a></p>
+        </div>
+    </section>
+
+    <footer>
+        <div>© Since 2025 Multvr.</div>
+        <div class="socials">
+            <a href="https://github.com/username" target="_blank" rel="noopener" title="GitHub"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/github.svg" alt="GH" style="width:20px;height:20px;filter:invert(1)"/></a>
+            <a href="https://instagram.com/username" target="_blank" rel="noopener" title="Instagram"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/instagram.svg" alt="IG" style="width:20px;height:20px;filter:invert(1)"/></a>
+            <a href="mailto:trollmr537@gmail.com" title="Email"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/gmail.svg" alt="Mail" style="width:20px;height:20px;filter:invert(1)"/></a>
+        </div>
+    </footer>
+
+    <script>
+        // Scroll to contact when Contact Person button is clicked
+        document.getElementById('contactBtn').addEventListener('click', () => {
+            const target = document.querySelector('#contact');
+            if (target) target.scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Smooth scroll for nav links
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', e => {
+                e.preventDefault();
+                const href = link.getAttribute('href');
+                const target = document.querySelector(href);
+                if (target) target.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+
+        // Pop Up Modal for Projects
+        const projectCards = document.querySelectorAll('.projects .card');
+        const modal = document.getElementById('projectModal');
+        const modalImg = document.getElementById('modalImg');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalDesc = document.getElementById('modalDesc');
+        const closeModal = document.getElementById('closeModal');
+
+        projectCards.forEach(card => {
+            card.addEventListener('click', () => {
+                modalImg.src = card.getAttribute('data-img');
+                modalTitle.textContent = card.getAttribute('data-title');
+                modalDesc.textContent = card.getAttribute('data-desc');
+                modal.classList.add('active');
+                closeModal.focus();
+            });
+        });
+
+        // View buttons inside project cards
+        document.querySelectorAll('.btn-view').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const card = btn.closest('.card');
+                if (!card) return;
+                modalImg.src = card.getAttribute('data-img');
+                modalTitle.textContent = card.getAttribute('data-title');
+                modalDesc.textContent = card.getAttribute('data-desc');
+                modal.classList.add('active');
+                closeModal.focus();
+            });
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (modal.classList.contains('active')) modal.classList.remove('active');
+            }
+        });
+
+        closeModal.addEventListener('click', () => {
+            modal.classList.remove('active');
+        });
+
+        // Close modal when clicking outside content
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+            }
+        });
+
+        // Hero typing effect (simple)
+        (function(){
+            const el = document.getElementById('heroTitle');
+            const text = el.textContent;
+            el.textContent = '';
+            let i = 0;
+            function step(){
+                if(i <= text.length){
+                    el.textContent = text.slice(0, i++);
+                    setTimeout(step, 28);
+                }
+            }
+            setTimeout(step, 300);
+        })();
+
+        // Animate skill bars when skills section is visible
+        (function(){
+            const skillsSection = document.getElementById('skills');
+            const fills = document.querySelectorAll('.skill-fill');
+            const obs = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if(entry.isIntersecting){
+                        fills.forEach(f => {
+                            const p = f.getAttribute('data-progress') || 60;
+                            f.style.width = p + '%';
+                        });
+                        obs.disconnect();
+                    }
+                });
+            }, { threshold: 0.25 });
+            if(skillsSection) obs.observe(skillsSection);
+        })();
+
+        // Splash overlay: animated entrance, progress and skip
+        (function(){
+            const splash = document.getElementById('splash');
+            if (!splash) return;
+            const content = splash.querySelector('.splash-content');
+            const logo = document.getElementById('splashLogo');
+            const fill = document.getElementById('splashFill');
+            const skip = document.getElementById('splashSkip');
+            const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const DURATION = 2000; // ms visible before auto hide
+            let hidden = false;
+            function removeSplash(){
+                if(hidden) return; hidden = true;
+                splash.classList.add('hide');
+                setTimeout(()=>{ if(splash && splash.parentNode) splash.parentNode.removeChild(splash); }, 520);
+            }
+            function start(){
+                if(reduced){ removeSplash(); return; }
+                // animate logo + progress
+                if(logo) logo.classList.add('logo-entrance');
+                requestAnimationFrame(()=>{
+                    if(fill) fill.style.width = '100%';
+                    content.style.transform = 'scale(1)';
+                });
+                setTimeout(removeSplash, DURATION);
+            }
+            // interactions
+            splash.addEventListener('click', removeSplash);
+            if(skip) skip.addEventListener('click', (e)=>{ e.stopPropagation(); removeSplash(); });
+            if(skip) skip.tabIndex = 0;
+            setTimeout(start, 120);
+        })();
+    </script>
+</body>
+</html>
